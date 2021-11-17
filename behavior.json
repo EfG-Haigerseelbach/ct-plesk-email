@@ -1,0 +1,126 @@
+[
+	{
+		"default": [
+			{
+				"command": "plesk bin mail -l -json",
+				"output": [
+					{
+						"type": "mailname",
+						"name": "mail@domain"
+					}
+				]
+			},
+			{
+				"command": "plesk bin mail -i mail@domain",
+				"output": "Mailname:           test\nDomain:             <domain>\nMailbox:            false\nPassword type:      sym\nMbox quota:         Default value (Unlimited)\nMailgroup:          true\nGroup member(s):    <mail>@<external domain> \nAttachment files:   Empty\nAutoresponders:     Disabled\nDescription:        Auto-maintained mail box for ${person.description}\n\nSUCCESS: Gathering information for '<mail>@<domain>' complete"
+			},
+			{
+				"command": "test",
+				"output": "works"
+			},
+			{
+				"command": "cp a b",
+				"output": "copy not supported"
+			}
+		]
+	},
+	{
+		"case1": [
+			{
+				"command": "test",
+				"output": "works also for case1"
+			}
+		]
+	},
+	{
+		"case11": [
+			{
+				"command": "plesk bin mail -i some.mail1@domain",
+				"output": "Mailname:           test\nDomain:             domain\nMailbox:            false\nPassword type:      sym\nMbox quota:         Default value (Unlimited)\nMailgroup:          true\nGroup member(s):    some.mail1@externaldomain \nAttachment files:   Empty\nAutoresponders:     Disabled\nDescription:        Auto-maintained mail box for some mail1\n \nSUCCESS: Gathering information for 'some.mail1@domain' complete"
+			},
+			{
+				"command": "plesk bin mail -i some.mail2@domain",
+				"output": "Mailname:           test\nDomain:             domain\nMailbox:            false\nPassword type:      sym\nMbox quota:         Default value (Unlimited)\nMailgroup:          true\nGroup member(s):    some.mail2@externaldomain \nAttachment files:   Empty\nAutoresponders:     Disabled\nDescription:        Auto-maintained mail box for some mail2\n \nSUCCESS: Gathering information for 'some.mail2@domain' complete"
+			},
+			{
+				"command": "plesk bin mail -i some.mail3@domain",
+				"output": "Mailname:           test\nDomain:             domain\nMailbox:            false\nPassword type:      sym\nMbox quota:         Default value (Unlimited)\nMailgroup:          true\nGroup member(s):    some.mail3@externaldomain \nAttachment files:   Empty\nAutoresponders:     Disabled\nDescription:        Auto-maintained mail box for some mail3\n \nSUCCESS: Gathering information for 'some.mail3@domain' complete"
+			},
+			{
+				"command": "plesk bin mail -l -json",
+				"output": [
+					{
+						"type": "mailname",
+						"name": "some.mail1@domain"
+					},
+					{
+						"type": "mailname",
+						"name": "some.mail2@domain"
+					},
+					{
+						"type": "mailname",
+						"name": "some.mail3@domain"
+					}
+				]
+			}
+		]
+	},
+	{
+		"case12": [
+			{
+				"command": "plesk bin mail -i some.mail1@domain",
+				"output": "Mailname:           test\nDomain:             domain\nMailbox:            false\nPassword type:      sym\nMbox quota:         Default value (Unlimited)\nMailgroup:          true\nGroup member(s):    some.mail1@externaldomain \nAttachment files:   Empty\nAutoresponders:     Disabled\nDescription:        Auto-maintained mail box for some mail1\n \nSUCCESS: Gathering information for 'some.mail1@domain' complete"
+			},
+			{
+				"command": "plesk bin mail -i some.mail2@domain",
+				"output": "Mailname:           test\nDomain:             domain\nMailbox:            false\nPassword type:      sym\nMbox quota:         Default value (Unlimited)\nMailgroup:          true\nGroup member(s):    some.mail2@externaldomain \nAttachment files:   Empty\nAutoresponders:     Disabled\nDescription:        Auto-maintained mail box for some mail2\n \nSUCCESS: Gathering information for 'some.mail2@domain' complete"
+			},
+			{
+				"command": "plesk bin mail -l -json",
+				"output": [
+					{
+						"type": "mailname",
+						"name": "some.mail1@domain"
+					},
+					{
+						"type": "mailname",
+						"name": "some.mail2@domain"
+					}
+				]
+			},
+			{
+				"command": "plesk bin mail --create some.mail3 -passwd '' -forwarding true -forwarding-addresses add:some.mail3@externaldomain -description 'Auto-maintained mail box for Forwarding to some.mail3'",
+				"output": "\nSUCCESS: Creation of mailname 'some.mail3' complete"
+			}
+		]
+	},
+	{
+		"case13": [
+			{
+				"command": "plesk bin mail -i some.mail1@domain",
+				"output": "Mailname:           test\nDomain:             domain\nMailbox:            false\nPassword type:      sym\nMbox quota:         Default value (Unlimited)\nMailgroup:          true\nGroup member(s):    some.mail1@externaldomain \nAttachment files:   Empty\nAutoresponders:     Disabled\nDescription:        Auto-maintained mail box for some mail1\n \nSUCCESS: Gathering information for 'some.mail1@domain' complete"
+			},
+			{
+				"command": "plesk bin mail -i some.mail2@domain",
+				"output": "Mailname:           test\nDomain:             domain\nMailbox:            false\nPassword type:      sym\nMbox quota:         Default value (Unlimited)\nMailgroup:          true\nGroup member(s):    some.mail2@externaldomain \nAttachment files:   Empty\nAutoresponders:     Disabled\nDescription:        Auto-maintained mail box for some mail2\n \nSUCCESS: Gathering information for 'some.mail2@domain' complete"
+			},
+			{
+				"command": "plesk bin mail -l -json",
+				"output": [
+					{
+						"type": "mailname",
+						"name": "some.mail1@domain"
+					},
+					{
+						"type": "mailname",
+						"name": "some.mail2@domain"
+					}
+				]
+			},
+			{
+				"command": "plesk bin mail --create some.mail3 -passwd '' -forwarding true -forwarding-addresses add:some.mail3@externaldomain -description 'Auto-maintained mail box for Forwarding to some.mail3'",
+				"output": "\nFAILURE: Creation of mailname 'some.mail3' failed"
+			}
+		]
+	}
+]

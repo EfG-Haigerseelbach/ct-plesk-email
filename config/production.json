@@ -1,0 +1,26 @@
+{
+    "debug": false,
+    "debugOutput" : { },
+
+    "churchtools_api": {
+        "url": "https://<your_churchs_name>.church.tools",
+        "username": "<username_as_email_address>", 
+        "password": "<password>"
+    },
+
+    "domainForGovernedMailboxes": "<domain_name.de>",
+    "tags" : {
+        "forwarding_mailbox": "E-Mail Weiterleitung",
+        "mailbox": "E-Mail Postfach"
+    },
+    
+    "email": {
+        "enabled": false,
+        "host": "example.org",
+        "port": 465,
+        "secure": true,
+        "user":"email-service@example.org",
+        "password":"password",
+        "sender": "\"E-Mail Service ✉️\" <email-service@example.org>"
+    }
+}

@@ -1,0 +1,61 @@
+{
+    // Verwendet IntelliSense zum Ermitteln möglicher Attribute.
+    // Zeigen Sie auf vorhandene Attribute, um die zugehörigen Beschreibungen anzuzeigen.
+    // Weitere Informationen finden Sie unter https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch cronJob",
+            "program": "${workspaceFolder}/cronJob.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch index.js",
+            "program": "${workspaceFolder}/index.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch emailNotificationConfigurationTest.js",
+            "program": "${workspaceFolder}/emailNotificationConfigurationTest.js",
+            "args": [
+                "test@example.org",
+              ],
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Mocha Tests",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+            "args": [
+                "--require mocha-steps",
+                "--slow",
+                "5000",
+                "${workspaceFolder}/test/**/*.test.js",
+              ],
+              "internalConsoleOptions": "openOnSessionStart",
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Mocha Tests for index.js",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+            "args": [
+                "--require mocha-steps",
+                "--slow",
+                "5000",
+                "${workspaceFolder}/test/**/index.test.js",
+              ],
+              "internalConsoleOptions": "openOnSessionStart",
+        }
+    ]
+}

@@ -102,3 +102,9 @@ dist
 
 # TernJS port file
 .tern-port
+
+# config default
+/config/default.json
+
+# cron job input data file
+inputDataForCronJob.json
