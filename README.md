@@ -1,5 +1,17 @@
 # ChurchTools-Plesk-E-Mail Integration
 
+Integrating a Mailbox Governance for Plesk with ChurchTools
+
+## Reasoning
+
+Within a church's ministries there is a natural fluctuation of employees and volunteers. There is also a good chance that some of them need a e-mail mailbox
+related to the church's domain. Hence, an administrator taking care of these mailboxes has a constant work load which is only dedicated to the creation, adjustment and
+deletion of mailboxes.
+
+Within ChurchTools the person master data contains (at least one) e-mail address. In case this is a private e-mail address (and not already one in the realm of the church's domain)this integration can be used to automatically govern 'official' mailboxes for the church's domain.
+
+![](idea.svg)
+
 ## Installation
 
 1. Clone this repository `git clone https://github.com/EfG-Haigerseelbach/ct-plesk-email.git`
