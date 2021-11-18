@@ -10,7 +10,7 @@ deletion of mailboxes.
 
 Within ChurchTools the person master data contains (at least one) e-mail address. In case this is a private e-mail address (and not already one in the realm of the church's domain)this integration can be used to automatically govern 'official' mailboxes for the church's domain.
 
-![](idea.svg)
+![idea sketch](idea.svg)
 
 ## Installation
 
