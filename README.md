@@ -1,8 +1,39 @@
 # ChurchTools-Plesk-E-Mail Integration
 
-## E-mail notification
+## Installation
 
-The following options are available for configuration of the e-mail notification.
+1. Clone this repository `git clone https://github.com/EfG-Haigerseelbach/ct-plesk-email.git`
+2. Change to directory `ct-plesk-email`
+3. Run command `npm install`
+4. Change to directory `ct-plesk-email\config`
+5. Copy `template.json` to `default.json`
+6. Edit `default.json` according to your needs. Refer to section **Configuration**
+
+## Configuration
+
+### ChurchTools API
+
+| Parameter   | Data Type | Default | Possible Values | Explanation                                                                                                  |
+|-------------|-----------|---------|-----------------|--------------------------------------------------------------------------------------------------------------|
+| `url`       | string    | empty   | n/a             | This is the URL of your ChurchTools instance. If hosted, the pattern is `https://<church-name>.church.tools` |
+| `username`  | string    | empty   | n/a             | Name of the user to authenticate against the ChurchTools API                                                 |
+| `password`  | string    | empty   | n/a             | Password of this user                                                                                        |
+| `log_level` | number    | 1       | 0,1,2,4         | Log-level of the ChurchTools client. 0 = no output. 1 = errors. 2 = info. 4 = debug.                         |
+
+### ChurchTools Tags
+
+| Parameter            | Data Type | Default           | Possible Values | Explanation                                                                                     |
+|----------------------|-----------|-------------------|-----------------|-------------------------------------------------------------------------------------------------|
+| `forwarding_mailbox` | string    | E-Mail Forwarding | n/a             | The name of the tag which shall indicate that a forwarding-mailbox shall be there for the user  |
+| `mailbox`            | string    | E-Mail Mailbox    | n/a             | The name of the tag which shall indicate that a (usual) mailbox shall be there for the user     |
+
+### Domain name for governed Mailboxes
+
+| Parameter                    | Data Type | Default | Possible Values | Explanation                                                                                     |
+|------------------------------|-----------|---------|-----------------|-------------------------------------------------------------------------------------------------|
+| `domainForGovernedMailboxes` | string    | empty   | n/a             | This is your own domain you use for your mailboxes and where plesk runs. Example: `example.org` |
+
+### E-mail Notification
 
 | Parameter  | Data Type | Default | Possible Values  | Explanation                                                                                                                                                                                                         |
 |------------|-----------|---------|------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -17,3 +48,11 @@ The following options are available for configuration of the e-mail notification
 Note that the e-mail notification is turned off by default (`enabled: false`). Hence, the initial configuration always works. However, when switching on e-mail notifications make sure to configure all parameters suitably. Simply setting `enabled: true` won't cut it.
 
 You can test you configuration using command `node emailNotificationConfigurationTest.js recipient@example.org` whereas `recipient@example.org` should be replaced by some e-mail address you have access to.
+
+## Usage
+
+tbd
+
+## E-mail notification
+
+tbd
