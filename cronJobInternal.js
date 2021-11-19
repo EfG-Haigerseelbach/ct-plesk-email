@@ -58,7 +58,7 @@ async function main() {
   result.details.issues = [];
   logger.info(`Cross-checking with the input data if there are any mailboxes to be created...`)
   for (var i in content) {
-    content[i].emailAddress = `${content[i].mailbox}@${config.domainForGovernedMailboxes}`;
+    content[i].emailAddress = `${content[i].firstName.toLowerCase()}.${content[i].lastName.toLowerCase()}@${config.domainForGovernedMailboxes}`;
     if (!isMailboxGoverned(governedMailboxes, content[i].emailAddress)) {
       // Create a random password but do not persist it
       content[i].password = passwordGenerator.generate({ length: 10, numbers: true });
