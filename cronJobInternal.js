@@ -9,6 +9,7 @@ var config = require('config');
 var Validator = require('jsonschema').Validator;
 
 const ExecUtils = require('./execUtils.js');
+const EmailNotifier = require('./emailNotifier.js');
 
 // Create a unique ID for the current execution of cronJob.js
 // This ID is used as label for all log messages and eases to 
@@ -57,19 +58,36 @@ async function main() {
   result.details.issues = [];
   logger.info(`Cross-checking with the input data if there are any mailboxes to be created...`)
   for (var i in content) {
-    var emailAddress = `${content[i].mailbox}@${config.domainForGovernedMailboxes}`;
-    if (!isMailboxGoverned(governedMailboxes, emailAddress)) {
+    content[i].emailAddress = `${content[i].mailbox}@${config.domainForGovernedMailboxes}`;
+    if (!isMailboxGoverned(governedMailboxes, content[i].emailAddress)) {
       // Create a random password but do not persist it
       content[i].password = passwordGenerator.generate({ length: 10, numbers: true });
       var success = await createMailbox(content[i]);
       if (success) {
-        result.details.newGovernedMailboxes.push(emailAddress);
+        result.details.newGovernedMailboxes.push(content[i].emailAddress);
         result.details.countOfGovernedMailboxesAfter++;
+
+        var recipientsEmailAddresses = process.argv[2];
+        if(content[i].type == config.tags.mailbox) {
+          // It is a mailFor mailboxes 
+          var subject = "An E-Mail Mailbox has been created for you";
+          var text = `An E-Mail Mailbox ${content[i].emailAddress} has been created for you. Use password ${content[i].password}`;
+          var html = `An E-Mail Mailbox ${content[i].emailAddress} has been created for you. Use password ${content[i].password}`;
+
+          EmailNotifier.send(content[i].targetEmail, subject, text, html).catch(console.error);
+        } else if(content[i].type == config.tags.forwarding_mailbox) {
+          var subject = "An E-Mail Address has been created for you";
+          var text = `The E-Mail Address ${content[i].emailAddress} Mailbox has been created for you.`;
+          var html = `The E-Mail Address ${content[i].emailAddress} Mailbox has been created for you.`;
+
+          EmailNotifier.send(content[i].targetEmail, subject, text, html).catch(console.error);
+        }
       } else {
-        result.details.issues.push(`Could not create governed mailbox for ${emailAddress}`);
+        result.details.issues.push(`Could not create governed mailbox for ${content[i].emailAddress}`);
       }
     }
   }
+
   result.success = true;
   return result;
 }
