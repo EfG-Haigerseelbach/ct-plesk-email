@@ -195,7 +195,7 @@ async function getGovernedMailboxes() {
 
   var governedMailboxes = [];
   for (var i in mailboxes) {
-    if (!(mailboxes[i].details === undefined) && mailboxes[i].details.description.startsWith('Auto-maintained mail box')) {
+    if (!(mailboxes[i].details === undefined) && !(mailboxes[i].details.description === undefined) && mailboxes[i].details.description.startsWith('Auto-maintained mail box')) {
       governedMailboxes.push(mailboxes[i]);
     }
   }
