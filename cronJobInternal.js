@@ -23,7 +23,7 @@ const myFormat = printf(({ level, message, label, timestamp }) => {
 });
 
 const logger = createLogger({
-  level: 'error', // Output all log messages (since 'debug' is the most verbose level)
+  level: 'debug', // Output all log messages (since 'debug' is the most verbose level)
   format: format.combine(
     label({ label: executionId }),
     timestamp(),

@@ -9,7 +9,7 @@ const exec = util.promisify(require('child_process').exec);
  * @return {string} standard output (stdout) or undefined in case of an error
  */
  async function execute(logger, command, environmentVariables) {
-    logger.debug(`Trying to execute command: ${command}`);
+    logger.debug(`Trying to execute command: ${command} with env. variables: ${JSON.stringify(environmentVariables)}`);
     try {
       const { stdout, stderr } = await exec(command, { env: environmentVariables });
       if(stderr) {
