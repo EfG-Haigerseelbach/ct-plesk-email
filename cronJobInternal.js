@@ -153,10 +153,9 @@ async function removeMailbox(person) {
 async function createMailbox(person) {
   logger.info(`Trying to create a mailbox for ${person.firstName} ${person.lastName} using a random password...`);
   // Pass the password via environment variable (due to security reasons)
-  process.env['PSA_PASSWORD'] = person.password;
   var command = `sudo plesk bin mail --create ${person.emailAddress} -passwd '' -forwarding true -forwarding-addresses add:${person.targetEmail} ` + 
     `-description 'Auto-maintained mail box for ${person.description}'`;
-  var output = await ExecUtils.execute(logger, command);
+  var output = await ExecUtils.execute(logger, command, {'PSA_PASSWORD' : person.password});
   if (!(output === undefined)) {
     logger.debug(`Command result: ${output.replace(/\r?\n/g, '')}`);
     output = output.trim();
