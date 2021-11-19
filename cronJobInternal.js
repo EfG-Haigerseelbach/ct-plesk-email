@@ -124,9 +124,9 @@ function readInputData() {
  * @return {boolean} true in case a mailbox could be removed, otherwise false
  */
 async function removeMailbox(person) {
-  logger.info(`Trying to remove mailbox ${person.mailbox}...`);
+  logger.info(`Trying to remove mailbox ${person.emailAddress}...`);
 
-  var command = `sudo plesk bin mail -r ${person.mailbox}`;
+  var command = `sudo plesk bin mail -r ${person.emailAddress}`;
   var output = await ExecUtils.execute(logger, command);
   if (!(output === undefined)) {
     logger.debug(`Command result: ${output.replace(/\r?\n/g, '')}`);
@@ -154,7 +154,7 @@ async function createMailbox(person) {
   logger.info(`Trying to create a mailbox for ${person.firstName} ${person.lastName} using a random password...`);
   // Pass the password via environment variable (due to security reasons)
   process.env['PSA_PASSWORD'] = person.password;
-  var command = `sudo plesk bin mail --create ${person.mailbox} -passwd '' -forwarding true -forwarding-addresses add:${person.targetEmail} ` + 
+  var command = `sudo plesk bin mail --create ${person.emailAddress} -passwd '' -forwarding true -forwarding-addresses add:${person.targetEmail} ` + 
     `-description 'Auto-maintained mail box for ${person.description}'`;
   var output = await ExecUtils.execute(logger, command);
   if (!(output === undefined)) {
