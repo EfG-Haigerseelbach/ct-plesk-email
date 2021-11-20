@@ -61,7 +61,7 @@ async function main() {
     content[i].emailAddress = `${content[i].firstName.toLowerCase()}.${content[i].lastName.toLowerCase()}@${config.domainForGovernedMailboxes}`;
     if (!isMailboxGoverned(governedMailboxes, content[i].emailAddress)) {
       // Create a random password but do not persist it
-      content[i].password = passwordGenerator.generate({ length: 15, numbers: true, symbols: true, strict: true, exclude: '"' });
+      content[i].password = passwordGenerator.generate({ length: 10, numbers: true, symbols: true, strict: true, exclude: '"' }) + crypto. randomInt(100, 999);;
       var success = await createMailbox(content[i]);
       if (success) {
         result.details.newGovernedMailboxes.push(content[i].emailAddress);
@@ -71,8 +71,8 @@ async function main() {
         if(content[i].type == config.tags.mailbox) {
           // It is a mailFor mailboxes 
           var subject = "An E-Mail Mailbox has been created for you";
-          var text = `An E-Mail Mailbox ${content[i].emailAddress} has been created for you. Use password ${content[i].password}`;
-          var html = `An E-Mail Mailbox ${content[i].emailAddress} has been created for you. Use password ${content[i].password}`;
+          var text = `An E-Mail Mailbox has been created for you.\nE-Mail address: ${content[i].emailAddress}\nPassword: ${content[i].password}`;
+          var html = `An E-Mail Mailbox has been created for you.<br>E-Mail address: ${content[i].emailAddress}<br>Password: <pre>${content[i].password}</pre>`;
 
           EmailNotifier.send(content[i].targetEmail, subject, text, html).catch(console.error);
         } else if(content[i].type == config.tags.forwarding_mailbox) {
