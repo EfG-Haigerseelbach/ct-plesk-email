@@ -1,6 +1,8 @@
 {
-    "debug": false,
-    "debugOutput" : { },
+    "logging": {
+        "cronJobInternal": "debug",
+        "index": "debug",
+    },
 
     "churchtools_api": {
         "url": "https://<your_churchs_name>.church.tools",
