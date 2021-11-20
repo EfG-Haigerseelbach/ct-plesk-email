@@ -16,24 +16,27 @@ Within ChurchTools the person master data contains (at least one) e-mail address
 
 ### Download
 
-1. Clone this repository `git clone https://github.com/EfG-Haigerseelbach/ct-plesk-email.git`
-2. Change to directory `ct-plesk-email`
-3. Run command `npm install`
-4. Change to directory `ct-plesk-email\config`
+1. Clone this repository `git clone https://github.com/EfG-Haigerseelbach/ct-plesk-email.git`.
+2. Change to directory `ct-plesk-email`.
+3. Run command `npm install`.
+4. Change to directory `ct-plesk-email\config`.
 
 ### Configure
 
-5. Copy `template.json` to `default.json`
-6. Edit `default.json` according to your needs. Refer to section **Configuration**
+5. Copy `template.json` to `default.json`.
+6. Edit `default.json` according to your needs. Refer to section **Configuration**.
 
 ### Schedule
 
 7. As normal user (not sudo!) run command `crontab -e` since querying the persons and their tags via the ChurchTools API should be run without administrator privileges.
-8. A the following line `*/5 * * * * /usr/local/bin/node /path/to/ct-plesk-email/index.js >> /path/to/ct-plesk-email/cron.log` to query for changes at person's tags every five minutes. Help on defining a cron-pattern that suits your needs can be found at [crontab guru](https://crontab.guru/).
+8. A the following line `*/5 * * * * cd /path/to/ct-plesk-email/ && /usr/local/bin/node /path/to/ct-plesk-email/index.js > /path/to/ct-plesk-email/cron.log 2>&1` to query for changes at person's tags every five minutes. Help on defining a cron-pattern that suits your needs can be found at [crontab guru](https://crontab.guru/). Explanation: `*/5 * * * *` tells to execute the process every five minutes. `cd /path/to/ct-plesk-email/` changes to the directory. `&&` combines both commands. `/usr/local/bin/node` is the absolute path of `node`. `/path/to/ct-plesk-email/index.js` is the node-application to be executed. `> /path/to/ct-plesk-email/cron.log` indicates that the standard output of the `index.js` script will be redirected to file `/path/to/ct-plesk-email/cron.log`. `2>&1` indicates that the standard error (2>) is redirected to the same file descriptor that is pointed by standard output (&1). So, both standard output and error will be redirected to `cron.log`.
 9. To check your user's cron jobs run command `crontab -l`.
-10. To test if the cron job is executed delete file `inputDataForCronJob.js` and wait for the job to be executed. The file should be created.
+10. To test if the cron job is executed delete file `inputDataForCronJob.js` (if existing) and wait for the job to be executed. The file should be created.
+11. tbd
 
 ## Configuration
+
+All configuration settings are located at `config/default.json`. Initially this file *does not exist*. You need to copy `config/template.json` and adjust it according to your needs. 
 
 ### ChurchTools API
 
