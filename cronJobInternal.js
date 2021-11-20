@@ -61,7 +61,7 @@ async function main() {
     content[i].emailAddress = `${content[i].firstName.toLowerCase()}.${content[i].lastName.toLowerCase()}@${config.domainForGovernedMailboxes}`;
     if (!isMailboxGoverned(governedMailboxes, content[i].emailAddress)) {
       // Create a random password but do not persist it
-      content[i].password = passwordGenerator.generate({ length: 10, numbers: true, symbols: true, strict: true });
+      content[i].password = passwordGenerator.generate({ length: 15, numbers: true, symbols: true, strict: true, exclude: '"' });
       var success = await createMailbox(content[i]);
       if (success) {
         result.details.newGovernedMailboxes.push(content[i].emailAddress);
