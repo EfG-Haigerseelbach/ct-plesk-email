@@ -14,12 +14,24 @@ Within ChurchTools the person master data contains (at least one) e-mail address
 
 ## Installation
 
+### Download
+
 1. Clone this repository `git clone https://github.com/EfG-Haigerseelbach/ct-plesk-email.git`
 2. Change to directory `ct-plesk-email`
 3. Run command `npm install`
 4. Change to directory `ct-plesk-email\config`
+
+### Configure
+
 5. Copy `template.json` to `default.json`
 6. Edit `default.json` according to your needs. Refer to section **Configuration**
+
+### Schedule
+
+7. As normal user (not sudo!) run command `crontab -e` since querying the persons and their tags via the ChurchTools API should be run without administrator privileges.
+8. A the following line `*/5 * * * * /usr/local/bin/node /path/to/ct-plesk-email/index.js >> /path/to/ct-plesk-email/cron.log` to query for changes at person's tags every five minutes. Help on defining a cron-pattern that suits your needs can be found at [crontab guru](https://crontab.guru/).
+9. To check your user's cron jobs run command `crontab -l`.
+10. To test if the cron job is executed delete file `inputDataForCronJob.js` and wait for the job to be executed. The file should be created.
 
 ## Configuration
 
