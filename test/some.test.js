@@ -34,7 +34,7 @@ describe('cron Job (main using sudo-mock)', function () {
 
     step('should be handle the case when there are three governed mailboxes which are named in the input data to be governed', async (done) => {
         // Given
-        process.env['SUDO_TEST_CASE'] = 'case11';
+        process.env['TEST_CASE'] = 'case11';
 
         givenInputDataEntry("some", "mail1", "some.mail1@externaldomain", "whatever");
         givenInputDataEntry("some", "mail2", "some.mail2@externaldomain", "whatever");
@@ -53,7 +53,7 @@ describe('cron Job (main using sudo-mock)', function () {
 
     step('should be handle the case when there are two governed mailboxes which are named in the input data to be governed', async (done) => {
         // Given
-        process.env['SUDO_TEST_CASE'] = 'case12';
+        process.env['TEST_CASE'] = 'case12';
 
         givenInputDataEntry("some", "mail1", "some.mail1@externaldomain", "whatever");
         givenInputDataEntry("some", "mail2", "some.mail2@externaldomain", "whatever");
@@ -72,7 +72,7 @@ describe('cron Job (main using sudo-mock)', function () {
 
     step('should be handle the case when there are two governed mailboxes which are named in the input data to be governed', async (done) => {
         // Given
-        process.env['SUDO_TEST_CASE'] = 'case13';
+        process.env['TEST_CASE'] = 'case13';
 
         givenInputDataEntry("some", "mail1", "some.mail1@externaldomain", "whatever");
         givenInputDataEntry("some", "mail2", "some.mail2@externaldomain", "whatever");
@@ -91,7 +91,7 @@ describe('cron Job (main using sudo-mock)', function () {
 
     it('should be able to get all mailboxes incl. their details', () => {
         // Given
-        //process.env['SUDO_TEST_CASE'] = 'case2';
+        //process.env['TEST_CASE'] = 'case2';
         var execMockOutput =
             'Mailname:           test\n' +
             'Domain:             domain\n' +

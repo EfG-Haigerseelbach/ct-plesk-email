@@ -63,7 +63,7 @@ describe('cron Job (individual functions)', function () {
         expect(value).to.have.a.property('description');
     });
 
-    it('should be able to handle not expected output of command "sudo plesk bin mail -i"', async () => {
+    it('should be able to handle not expected output of command "plesk bin mail -i"', async () => {
         // Given
         var execMockOutput =
             'some bad output';
@@ -89,8 +89,8 @@ describe('cron Job (individual functions)', function () {
             ' \n' +
             "SUCCESS: Gathering information for 'mail@domain' complete";
 
-        execUtilsExecuteStub.withArgs(sinon.match.any, `sudo plesk bin mail -l -json`).returns('[{"type":"mailname","name":"mail@domain"}]');
-        execUtilsExecuteStub.withArgs(sinon.match.any, `sudo plesk bin mail -i mail@domain`).returns(execMockOutput);
+        execUtilsExecuteStub.withArgs(sinon.match.any, `plesk bin mail -l -json`).returns('[{"type":"mailname","name":"mail@domain"}]');
+        execUtilsExecuteStub.withArgs(sinon.match.any, `plesk bin mail -i mail@domain`).returns(execMockOutput);
 
         // When
         var mailboxes = await CronJob.getMailboxes();
@@ -103,8 +103,8 @@ describe('cron Job (individual functions)', function () {
         var execMockOutput =
             'some bad output';
 
-        execUtilsExecuteStub.withArgs(sinon.match.any, `sudo plesk bin mail -l -json`).returns('[{"type":"mailname","name":"mail@domain"}]');
-        execUtilsExecuteStub.withArgs(sinon.match.any, `sudo plesk bin mail -i mail@domain`).returns(execMockOutput);
+        execUtilsExecuteStub.withArgs(sinon.match.any, `plesk bin mail -l -json`).returns('[{"type":"mailname","name":"mail@domain"}]');
+        execUtilsExecuteStub.withArgs(sinon.match.any, `plesk bin mail -i mail@domain`).returns(execMockOutput);
 
         // When
         var mailboxes = await CronJob.getMailboxes();
@@ -118,8 +118,8 @@ describe('cron Job (individual functions)', function () {
         //var execMockOutput =
         //    'some bad output';
 
-        execUtilsExecuteStub.withArgs(sinon.match.any, `sudo plesk bin mail -l -json`).returns('[{"unexpected":"attribute","typ":"mailname","nam":"mail@domain"}]');
-        //execUtilsExecuteStub.withArgs(sinon.match.any, `sudo plesk bin mail -i mail@domain`).returns(execMockOutput);
+        execUtilsExecuteStub.withArgs(sinon.match.any, `plesk bin mail -l -json`).returns('[{"unexpected":"attribute","typ":"mailname","nam":"mail@domain"}]');
+        //execUtilsExecuteStub.withArgs(sinon.match.any, `plesk bin mail -i mail@domain`).returns(execMockOutput);
 
         // When
         var mailboxes = await CronJob.getMailboxes();
@@ -157,7 +157,7 @@ describe('cron Job (individual functions)', function () {
         var mailbox = `${person.mailbox}@efghaigerseelbach.de`;
         person.mailbox = mailbox;
 
-        execUtilsExecuteStub.withArgs(sinon.match.any, `sudo plesk bin mail --create ${person.mailbox} -passwd '' -forwarding true -forwarding-addresses add:${person.targetEmail} -description 'Auto-maintained mail box for ${person.description}'`)
+        execUtilsExecuteStub.withArgs(sinon.match.any, `plesk bin mail --create ${person.mailbox} -passwd '' -forwarding true -forwarding-addresses add:${person.targetEmail} -description 'Auto-maintained mail box for ${person.description}'`)
             .returns(`\nSUCCESS: Creation of mailname '${person.mailbox}' complete`);
 
         // When
@@ -178,7 +178,7 @@ describe('cron Job (individual functions)', function () {
         var mailbox = `${person.mailbox}@efghaigerseelbach.de`;
         person.mailbox = mailbox;
 
-        execUtilsExecuteStub.withArgs(sinon.match.any, `sudo plesk bin mail --create ${person.mailbox} -passwd '' -forwarding true -forwarding-addresses add:${person.targetEmail} -description 'Auto-maintained mail box for ${person.description}'`)
+        execUtilsExecuteStub.withArgs(sinon.match.any, `plesk bin mail --create ${person.mailbox} -passwd '' -forwarding true -forwarding-addresses add:${person.targetEmail} -description 'Auto-maintained mail box for ${person.description}'`)
             .returns(`\nFAILURE: Creation of mailname '${person.mailbox}' failed`);
 
         // When
@@ -199,7 +199,7 @@ describe('cron Job (individual functions)', function () {
         var mailbox = `${person.mailbox}@efghaigerseelbach.de`;
         person.mailbox = mailbox;
 
-        execUtilsExecuteStub.withArgs(sinon.match.any, `sudo plesk bin mail --create ${person.mailbox} -passwd '' -forwarding true -forwarding-addresses add:${person.targetEmail} -description 'Auto-maintained mail box for ${person.description}'`)
+        execUtilsExecuteStub.withArgs(sinon.match.any, `plesk bin mail --create ${person.mailbox} -passwd '' -forwarding true -forwarding-addresses add:${person.targetEmail} -description 'Auto-maintained mail box for ${person.description}'`)
             .returns(undefined);
 
         // When
@@ -220,7 +220,7 @@ describe('cron Job (individual functions)', function () {
         var mailbox = `${person.mailbox}@efghaigerseelbach.de`;
         person.mailbox = mailbox;
 
-        execUtilsExecuteStub.withArgs(sinon.match.any, `sudo plesk bin mail -r ${person.mailbox}`)
+        execUtilsExecuteStub.withArgs(sinon.match.any, `plesk bin mail -r ${person.mailbox}`)
             .returns(`\nSUCCESS: Removal of '${person.mailbox}' complete`);
 
         // When
@@ -241,7 +241,7 @@ describe('cron Job (individual functions)', function () {
         var mailbox = `${person.mailbox}@efghaigerseelbach.de`;
         person.mailbox = mailbox;
 
-        execUtilsExecuteStub.withArgs(sinon.match.any, `sudo plesk bin mail -r ${person.mailbox}`)
+        execUtilsExecuteStub.withArgs(sinon.match.any, `plesk bin mail -r ${person.mailbox}`)
             .returns(`\nFAILURE: Removal of '${person.mailbox}' failed`);
 
         // When
@@ -262,7 +262,7 @@ describe('cron Job (individual functions)', function () {
         var mailbox = `${person.mailbox}@efghaigerseelbach.de`;
         person.mailbox = mailbox;
 
-        execUtilsExecuteStub.withArgs(sinon.match.any, `sudo plesk bin mail -r ${person.mailbox}`)
+        execUtilsExecuteStub.withArgs(sinon.match.any, `plesk bin mail -r ${person.mailbox}`)
             .returns(undefined);
 
         // When
@@ -425,16 +425,16 @@ function prepareStubForGettingListOfMailboxes(stub) {
         tmp.push({ "type": "mailname", "name": mockedMailboxes[i] });
     }
 
-    stub.withArgs(sinon.match.any, `sudo plesk bin mail -l -json`)
+    stub.withArgs(sinon.match.any, `plesk bin mail -l -json`)
         .returns(JSON.stringify(tmp));
 }
 
 /**
- * Mocks mailbox details returned by 'sudo plesk bin mail -i mailbox@domain'
+ * Mocks mailbox details returned by 'plesk bin mail -i mailbox@domain'
  * 
  * @param {object} stub sinon.stub for ExecUtils.execute
- * @param {string} domain domain output at sudo plesk bin mail -i  
- * @param {string} externalDomain external domain output at sudo plesk bin mail -i 
+ * @param {string} domain domain output at plesk bin mail -i  
+ * @param {string} externalDomain external domain output at plesk bin mail -i 
  * @param {string} firstName first name output in the description
  * @param {string} lastName last name output in the description
  * @param {boolean} governed if true the description starts with 'Auto-maintained'
@@ -466,7 +466,7 @@ function givenSomeMailbox(stub, domain = "domain", externalDomain = "externaldom
         ' \n' +
         `${successOrFailure}: Gathering information for '${firstName.toLowerCase()}.${lastName.toLowerCase()}@${domain}' complete`;
 
-    stub.withArgs(sinon.match.any, `sudo plesk bin mail -i ${firstName.toLowerCase()}.${lastName.toLowerCase()}@${domain}`).returns(execMockOutput);
+    stub.withArgs(sinon.match.any, `plesk bin mail -i ${firstName.toLowerCase()}.${lastName.toLowerCase()}@${domain}`).returns(execMockOutput);
 
     mockedMailboxes.push(`${firstName.toLowerCase()}.${lastName.toLowerCase()}@${domain}`);
 }

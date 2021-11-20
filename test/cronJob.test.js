@@ -2,7 +2,7 @@ var sinon = require("sinon");
 
 const CronJobInternal = require('../cronJobInternal.js');
 
-describe('cron Job (main using sudo-mock)', function () {
+describe('cron Job (main)', function () {
     
     var cronJobInternalStub;
     

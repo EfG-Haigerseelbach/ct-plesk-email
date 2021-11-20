@@ -23,7 +23,7 @@ const myFormat = printf(({ level, message, label, timestamp }) => {
 });
 
 const logger = createLogger({
-  level: 'debug', // Output all log messages (since 'debug' is the most verbose level)
+  level: config.logging.cronJobInternal, // Output all log messages (since 'debug' is the most verbose level)
   format: format.combine(
     label({ label: executionId }),
     timestamp(),
@@ -126,7 +126,7 @@ function readInputData() {
 async function removeMailbox(person) {
   logger.info(`Trying to remove mailbox ${person.emailAddress}...`);
 
-  var command = `sudo plesk bin mail -r ${person.emailAddress}`;
+  var command = `plesk bin mail -r ${person.emailAddress}`;
   var output = await ExecUtils.execute(logger, command);
   if (!(output === undefined)) {
     logger.debug(`Command result: ${output.replace(/\r?\n/g, '')}`);
@@ -151,11 +151,22 @@ async function removeMailbox(person) {
  * @return {boolean} true in case a mailbox could be created, otherwise false
  */
 async function createMailbox(person) {
-  logger.info(`Trying to create a mailbox for ${person.firstName} ${person.lastName} using a random password...`);
-  // Pass the password via environment variable (due to security reasons)
-  var command = `plesk bin mail --create ${person.emailAddress} -passwd '' -forwarding true -forwarding-addresses add:${person.targetEmail} ` + 
-    `-description 'Auto-maintained mail box for ${person.description}'`;
-  var output = await ExecUtils.execute(logger, command, {'PSA_PASSWORD' : person.password});
+  var output;
+  if(person.type == config.tags.forwarding_mailbox) {
+    logger.info(`Trying to create a mailbox for ${person.firstName} ${person.lastName} (forwarding)`);
+    // Pass the password via environment variable (due to security reasons)
+    var command = `plesk bin mail --create ${person.emailAddress} -passwd '' -forwarding true -forwarding-addresses add:${person.targetEmail} ` + 
+      `-description 'Auto-maintained mail box for ${person.description}'`;
+    output = await ExecUtils.execute(logger, command, {'PSA_PASSWORD' : person.password});
+  } else if(person.type == config.tags.mailbox) {
+    logger.info(`Trying to create a mailbox for ${person.firstName} ${person.lastName} (real mailbox)`);
+    // Pass the password via environment variable (due to security reasons)
+    command = `plesk bin mail --create ${person.emailAddress} -mailbox true -passwd '' -description 'Auto-maintained mail box for ${person.description}'`;
+    output = await ExecUtils.execute(logger, command, {'PSA_PASSWORD' : person.password});
+  } else {
+    logger.error(`No implementation for type ${person.type} existing. Did the developer miss something?!`);
+    return false;
+  }
   if (!(output === undefined)) {
     logger.debug(`Command result: ${output.replace(/\r?\n/g, '')}`);
     output = output.trim();
@@ -210,7 +221,7 @@ async function getGovernedMailboxes() {
  */
 async function getMailboxes() {
   logger.info(`Trying to list and get details of all mailboxes...`);
-  var output = await ExecUtils.execute(logger, `sudo plesk bin mail -l -json`);
+  var output = await ExecUtils.execute(logger, `plesk bin mail -l -json`);
   var mailboxes = JSON.parse(output);
 
   var v = new Validator();
@@ -241,7 +252,7 @@ async function getMailboxes() {
  * Determine mailbox details
  * @return {array} - mailbox details
  * 
- * Exemplary result of command 'sudo plesk bin mail -i <mail>@<domain>':
+ * Exemplary result of command 'plesk bin mail -i <mail>@<domain>':
  * Mailname:           test
  * Domain:             <domain>
  * Mailbox:            false
@@ -258,7 +269,7 @@ async function getMailboxes() {
 async function getMailboxDetails(emailAddress) {
   logger.info(`Trying to get mail box details for ${emailAddress}...`);
 
-  var command = `sudo plesk bin mail -i ${emailAddress}`;
+  var command = `plesk bin mail -i ${emailAddress}`;
   var output = await ExecUtils.execute(logger, command);
   output = output.split('\n');
   var details = {};
