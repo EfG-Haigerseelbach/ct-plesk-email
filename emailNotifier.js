@@ -1,8 +1,8 @@
 const nodemailer = require("nodemailer");
 var config = require('config');
+const { loggers } = require("winston");
 
-async function send(recipientsEmailAddresses, subject, text, html) {
-    
+async function send(logger, recipientsEmailAddresses, subject, text, html) {
     // create a reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
       host: config.email.host,
@@ -21,10 +21,15 @@ async function send(recipientsEmailAddresses, subject, text, html) {
       subject: subject,
       text: text, // plain text body
       html: html // html body
+    }).catch((err) => {  
+      logger.error(err);
     });
-  
-    console.log("Message sent: %s", info.messageId);
-    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+    if(info != undefined) {
+      logger.info(info.messageId);
+      return true;
+    } else {
+      return false;
+    }
   }   
 
 module.exports = {
