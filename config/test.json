@@ -1,29 +1,30 @@
 {
     "logging": {
         "cronJobInternal": "debug",
-        "index": "debug",
+        "index": "debug"
     },
 
     "churchtools_api": {
-        "url": "https://<your_churchs_name>.church.tools",
-        "username": "<username_as_email_address>", 
-        "password": "<password>"
+        "url": "https://exmaple.church.tools",
+        "username": "username", 
+        "password": "password",
+        "log_level": 0
     },
 
-    "domainForGovernedMailboxes": "<domain_name.de>",
+    "domainForGovernedMailboxes": "example.org",
     "tags" : {
         "forwarding_mailbox": "E-Mail Forwarding",
         "mailbox": "E-Mail Mailbox"
     },
-    
+
     "email": {
         "enabled": false,
         "host": "example.org",
         "port": 465,
         "secure": true,
-        "user":"email-service@example.org",
+        "user":"email@example.org",
         "password":"password",
-        "sender": "\"E-Mail Service ✉️\" <email-service@example.org>"
+        "sender": "\"E-Mail Service ✉️\" <email@example.org>"
     },
     "language": "de_DE",
     "notification": {
