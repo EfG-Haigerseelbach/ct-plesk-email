@@ -5,6 +5,7 @@ const path = require("path");
 
 var ExecUtils = require('../execUtils.js');
 const fs = require('fs');
+var config = require('config');
 
 const CronJob = require('../cronJobInternal.js');
 
@@ -146,19 +147,13 @@ describe('cron Job (individual functions)', function () {
     });
     it('should be able to create a mailbox', async () => {
         // Given
-        var person = {
-            "id": 1,
-            "firstName": "Johannes",
-            "lastName": "Gilbert",
-            "mailbox": "johannes.gilbert",
-            "targetEmail": "johannes.gilbert@posteo.de",
-            "description": "Weiterleitungs-Postfach fuer Johannes Gilbert"
-        };
-        var mailbox = `${person.mailbox}@efghaigerseelbach.de`;
-        person.mailbox = mailbox;
+        var person = givenSomePersonObject();
 
-        execUtilsExecuteStub.withArgs(sinon.match.any, `plesk bin mail --create ${person.mailbox} -passwd '' -forwarding true -forwarding-addresses add:${person.targetEmail} -description 'Auto-maintained mail box for ${person.description}'`)
-            .returns(`\nSUCCESS: Creation of mailname '${person.mailbox}' complete`);
+        var command = `plesk bin mail --create ${person.emailAddress} -passwd '' -forwarding true -forwarding-addresses add:${person.targetEmail} ` + 
+                      `-description 'Auto-maintained mail box for ${person.description}'`;
+
+        execUtilsExecuteStub.withArgs(sinon.match.any, command, sinon.match.any)
+            .returns(`\nSUCCESS: Creation of mailname '${person.emailAddress}' complete`);
 
         // When
         var mailboxCreated = await CronJob.createMailbox(person);
@@ -167,19 +162,13 @@ describe('cron Job (individual functions)', function () {
     });
     it('should be able to handle a failure when creating a mailbox', async () => {
         // Given
-        var person = {
-            "id": 1,
-            "firstName": "Johannes",
-            "lastName": "Gilbert",
-            "mailbox": "johannes.gilbert",
-            "targetEmail": "johannes.gilbert@posteo.de",
-            "description": "Weiterleitungs-Postfach fuer Johannes Gilbert"
-        };
-        var mailbox = `${person.mailbox}@efghaigerseelbach.de`;
-        person.mailbox = mailbox;
+        var person = givenSomePersonObject();
 
-        execUtilsExecuteStub.withArgs(sinon.match.any, `plesk bin mail --create ${person.mailbox} -passwd '' -forwarding true -forwarding-addresses add:${person.targetEmail} -description 'Auto-maintained mail box for ${person.description}'`)
-            .returns(`\nFAILURE: Creation of mailname '${person.mailbox}' failed`);
+        var command = `plesk bin mail --create ${person.emailAddress} -passwd '' -forwarding true -forwarding-addresses add:${person.targetEmail} ` + 
+                      `-description 'Auto-maintained mail box for ${person.description}'`;
+
+        execUtilsExecuteStub.withArgs(sinon.match.any, command, sinon.match.any)
+            .returns(`\nFAILURE: Creation of mailname '${person.emailAddress}' failed`);
 
         // When
         var mailboxCreated = await CronJob.createMailbox(person);
@@ -188,18 +177,12 @@ describe('cron Job (individual functions)', function () {
     });
     it('should be able to handle a failure when creating a mailbox (no output of command execution)', async () => {
         // Given
-        var person = {
-            "id": 1,
-            "firstName": "Johannes",
-            "lastName": "Gilbert",
-            "mailbox": "johannes.gilbert",
-            "targetEmail": "johannes.gilbert@posteo.de",
-            "description": "Weiterleitungs-Postfach fuer Johannes Gilbert"
-        };
-        var mailbox = `${person.mailbox}@efghaigerseelbach.de`;
-        person.mailbox = mailbox;
+        var person = givenSomePersonObject();
 
-        execUtilsExecuteStub.withArgs(sinon.match.any, `plesk bin mail --create ${person.mailbox} -passwd '' -forwarding true -forwarding-addresses add:${person.targetEmail} -description 'Auto-maintained mail box for ${person.description}'`)
+        var command = `plesk bin mail --create ${person.emailAddress} -passwd '' -forwarding true -forwarding-addresses add:${person.targetEmail} ` + 
+                      `-description 'Auto-maintained mail box for ${person.description}'`;
+
+        execUtilsExecuteStub.withArgs(sinon.match.any, command, sinon.match.any)
             .returns(undefined);
 
         // When
@@ -209,19 +192,10 @@ describe('cron Job (individual functions)', function () {
     });
     it('should be able to remove a mailbox', async () => {
         // Given
-        var person = {
-            "id": 1,
-            "firstName": "Johannes",
-            "lastName": "Gilbert",
-            "mailbox": "johannes.gilbert",
-            "targetEmail": "johannes.gilbert@posteo.de",
-            "description": "Weiterleitungs-Postfach fuer Johannes Gilbert"
-        };
-        var mailbox = `${person.mailbox}@efghaigerseelbach.de`;
-        person.mailbox = mailbox;
+        var person = givenSomePersonObject();
 
-        execUtilsExecuteStub.withArgs(sinon.match.any, `plesk bin mail -r ${person.mailbox}`)
-            .returns(`\nSUCCESS: Removal of '${person.mailbox}' complete`);
+        execUtilsExecuteStub.withArgs(sinon.match.any, `plesk bin mail -r ${person.emailAddress}`)
+            .returns(`\nSUCCESS: Removal of '${person.emailAddress}' complete`);
 
         // When
         var mailboxRemoved = await CronJob.removeMailbox(person);
@@ -230,19 +204,10 @@ describe('cron Job (individual functions)', function () {
     });
     it('should be able to handle a failure when removing a mailbox', async () => {
         // Given
-        var person = {
-            "id": 1,
-            "firstName": "Johannes",
-            "lastName": "Gilbert",
-            "mailbox": "johannes.gilbert",
-            "targetEmail": "johannes.gilbert@posteo.de",
-            "description": "Weiterleitungs-Postfach fuer Johannes Gilbert"
-        };
-        var mailbox = `${person.mailbox}@efghaigerseelbach.de`;
-        person.mailbox = mailbox;
+        var person = givenSomePersonObject();
 
-        execUtilsExecuteStub.withArgs(sinon.match.any, `plesk bin mail -r ${person.mailbox}`)
-            .returns(`\nFAILURE: Removal of '${person.mailbox}' failed`);
+        execUtilsExecuteStub.withArgs(sinon.match.any, `plesk bin mail -r ${person.emailAddress}`)
+            .returns(`\nFAILURE: Removal of '${person.emailAddress}' failed`);
 
         // When
         var mailboxRemoved = await CronJob.removeMailbox(person);
@@ -251,18 +216,9 @@ describe('cron Job (individual functions)', function () {
     });
     it('should be able to handle a failure when removing a mailbox (no output of command execution)', async () => {
         // Given
-        var person = {
-            "id": 1,
-            "firstName": "Johannes",
-            "lastName": "Gilbert",
-            "mailbox": "johannes.gilbert",
-            "targetEmail": "johannes.gilbert@posteo.de",
-            "description": "Weiterleitungs-Postfach fuer Johannes Gilbert"
-        };
-        var mailbox = `${person.mailbox}@efghaigerseelbach.de`;
-        person.mailbox = mailbox;
+        var person = givenSomePersonObject();
 
-        execUtilsExecuteStub.withArgs(sinon.match.any, `plesk bin mail -r ${person.mailbox}`)
+        execUtilsExecuteStub.withArgs(sinon.match.any, `plesk bin mail -r ${person.emailAddress}`)
             .returns(undefined);
 
         // When
@@ -469,4 +425,17 @@ function givenSomeMailbox(stub, domain = "domain", externalDomain = "externaldom
     stub.withArgs(sinon.match.any, `plesk bin mail -i ${firstName.toLowerCase()}.${lastName.toLowerCase()}@${domain}`).returns(execMockOutput);
 
     mockedMailboxes.push(`${firstName.toLowerCase()}.${lastName.toLowerCase()}@${domain}`);
+}
+
+function givenSomePersonObject() {
+    var person = {
+        "id": 1,
+        "firstName": "Max",
+        "lastName": "Mustermann",
+        "type": config.tags.forwarding_mailbox,
+        "targetEmail": "max.mustermann@example.org",
+        "description": "Forwarding mailbox for Max Mustermann"
+    };
+    person.emailAddress = `${person.firstName.toLowerCase()}.${person.lastName.toLowerCase()}@example.org`;
+    return person;
 }
