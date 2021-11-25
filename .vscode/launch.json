@@ -33,13 +33,16 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+            "env": {
+                "NODE_ENV": "test"
+            },
             "args": [
                 "--require mocha-steps",
                 "--slow",
                 "5000",
                 "${workspaceFolder}/test/**/*.test.js",
               ],
-              "internalConsoleOptions": "openOnSessionStart",
+            "internalConsoleOptions": "openOnSessionStart",
         },
         {
             "type": "node",
@@ -49,13 +52,54 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+            "env": {
+                "NODE_ENV": "test"
+            },
             "args": [
                 "--require mocha-steps",
                 "--slow",
                 "5000",
                 "${workspaceFolder}/test/**/index.test.js",
               ],
-              "internalConsoleOptions": "openOnSessionStart",
+            "internalConsoleOptions": "openOnSessionStart",
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Mocha Tests for emailNotifier.js",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+            "env": {
+                "NODE_ENV": "test"
+            },
+            "args": [
+                "--require mocha-steps",
+                "--slow",
+                "5000",
+                "${workspaceFolder}/test/**/emailNotifier.test.js",
+              ],
+            "internalConsoleOptions": "openOnSessionStart",
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Mocha Tests for individual functions",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+            "env": {
+                "NODE_ENV": "test"
+            },
+            "args": [
+                "--require mocha-steps",
+                "--slow",
+                "5000",
+                "${workspaceFolder}/test/**/individualFunction.test.js",
+              ],
+            "internalConsoleOptions": "openOnSessionStart",
         }
     ]
 }
