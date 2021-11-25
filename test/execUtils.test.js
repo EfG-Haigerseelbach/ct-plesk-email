@@ -7,12 +7,13 @@ var ExecUtils = require('../execUtils.js');
 const { fail } = require('assert');
 
 const logger = createLogger({
-    level: 'error', // Output all log messages (since 'debug' is the most verbose level)
+    level: 'error',
     format: format.json(),
-    transports: [ // Output log messages at the console as well as to a file
+    transports: [
         new transports.Console({ format: format.simple(), }),
     ],
 });
+logger.transports.forEach((t) => (t.silent = true));
 
 
 describe('execUtils', function () {
@@ -32,39 +33,39 @@ describe('execUtils', function () {
     });
     it('should be able to call sudo-mock using the default test case', async () => {
         // Given
-        process.env['SUDO_TEST_CASE'] = 'default';
+        process.env['TEST_CASE'] = 'default';
 
         // When
-        var value = await ExecUtils.execute(logger, 'sudo test');
+        var value = await ExecUtils.execute(logger, 'plesk test');
         expect(value).to.be.equal('works', 'value is expected to be "works" but is "' + value + '"');
 
     });
     it('should be able to call sudo-mock using the another test case', async () => {
         // Given
-        process.env['SUDO_TEST_CASE'] = 'case1';
+        process.env['TEST_CASE'] = 'case1';
 
         // When
-        var value = await ExecUtils.execute(logger, 'sudo test');
+        var value = await ExecUtils.execute(logger, 'plesk test');
         expect(value).to.be.equal('works also for case1', 'value is expected to be "works" but is "' + value + '"');
 
     });
 
     it('should be able to call sudo-mock using a command with forbidden chars (<>)', async () => {
         // Given
-        process.env['SUDO_TEST_CASE'] = 'case1';
+        process.env['TEST_CASE'] = 'case1';
 
         // When
-        var value = await ExecUtils.execute(logger, 'sudo test <');
+        var value = await ExecUtils.execute(logger, 'plesk test <');
         if(!(value === undefined)) {
             fail(`in case the command results in a syntax error the returned value shall be undefined`);
         }
     });
     it('should be able to call sudo-mock using a command with forbidden chars (<>)', async () => {
         // Given
-        process.env['SUDO_TEST_CASE'] = 'notexisting';
+        process.env['TEST_CASE'] = 'notexisting';
 
         // When
-        var value = await ExecUtils.execute(logger, 'sudo test');
+        var value = await ExecUtils.execute(logger, 'plesk test');
         if(!(value === undefined)) {
             fail(`in case the command outputs an error (stderr) the returned value shall be undefined`);
         }
