@@ -48,6 +48,11 @@ async function main() {
     return result;
   }
 
+  for (var i in content) {
+    content[i].firstName = content[i].firstName.replace(/[^a-zA-Z0-9\-]/g,'');
+    content[i].lastName = content[i].lastName.replace(/[^a-zA-Z0-9\-]/g,'');
+  }
+
   logger.info(`Checking for governed mailboxes...`);
   var governedMailboxes = await getGovernedMailboxes();
   logger.info(`There are ${governedMailboxes.length} governed mailboxes`);
@@ -61,26 +66,33 @@ async function main() {
     content[i].emailAddress = `${content[i].firstName.toLowerCase()}.${content[i].lastName.toLowerCase()}@${config.domainForGovernedMailboxes}`;
     if (!isMailboxGoverned(governedMailboxes, content[i].emailAddress)) {
       // Create a random password but do not persist it
-      content[i].password = passwordGenerator.generate({ length: 10, numbers: true, symbols: true, strict: true, exclude: '"' }) + crypto. randomInt(100, 999);;
+      content[i].password = passwordGenerator.generate({ length: 10, numbers: true, symbols: true, strict: true, exclude: '"' }) + crypto.randomInt(100, 999);
       var success = await createMailbox(content[i]);
       if (success) {
         result.details.newGovernedMailboxes.push(content[i].emailAddress);
         result.details.countOfGovernedMailboxesAfter++;
 
-        var recipientsEmailAddresses = process.argv[2];
         if(content[i].type == config.tags.mailbox) {
           // It is a mailFor mailboxes 
-          var subject = "An E-Mail Mailbox has been created for you";
-          var text = `An E-Mail Mailbox has been created for you.\nE-Mail address: ${content[i].emailAddress}\nPassword: ${content[i].password}`;
-          var html = `An E-Mail Mailbox has been created for you.<br>E-Mail address: ${content[i].emailAddress}<br>Password: <pre>${content[i].password}</pre>`;
-
-          EmailNotifier.send(content[i].targetEmail, subject, text, html).catch(console.error);
+          var subject = config.notification[config.language].creation_of_a_mailbox.subject;
+          var text = config.notification[config.language].creation_of_a_mailbox.text;
+          text = text.replace('{{emailAddress}}', content[i].emailAddress);
+          text = text.replace('{{password}}',  content[i].password);
+          var html = config.notification[config.language].creation_of_a_mailbox.html;
+          html = html.replace('{{emailAddress}}', content[i].emailAddress);
+          html = html.replace('{{password}}',  content[i].password);
+          
+          EmailNotifier.send(logger, content[i].targetEmail, subject, text, html).catch(console.error);
         } else if(content[i].type == config.tags.forwarding_mailbox) {
-          var subject = "An E-Mail Address has been created for you";
-          var text = `The E-Mail Address ${content[i].emailAddress} Mailbox has been created for you.`;
-          var html = `The E-Mail Address ${content[i].emailAddress} Mailbox has been created for you.`;
-
-          EmailNotifier.send(content[i].targetEmail, subject, text, html).catch(console.error);
+          var subject = config.notification[config.language].creation_of_a_forwarding_mailbox.subject;
+          var text = config.notification[config.language].creation_of_a_forwarding_mailbox.text;
+          text = text.replace('{{emailAddress}}', content[i].emailAddress);
+          text = text.replace('{{forwardingTarget}}',  content[i].targetEmail);
+          var html = config.notification[config.language].creation_of_a_forwarding_mailbox.html;
+          html = html.replace('{{emailAddress}}', content[i].emailAddress);
+          html = html.replace('{{forwardingTarget}}',  content[i].targetEmail);
+          
+          EmailNotifier.send(logger, content[i].targetEmail, subject, text, html).catch(console.error);
         }
       } else {
         result.details.issues.push(`Could not create governed mailbox for ${content[i].emailAddress}`);
@@ -116,11 +128,38 @@ function readInputData() {
 }
 
 /**
+ * Creates an archived as backup of the person's mailbox
+ * @param {object} person - object which contains at least the attributes 'mailbox'
+ * @returns {boolean} true if the backup was successful
+ */
+async function backupMailbox(person, dateTime = new Date().toISOString()) {
+  logger.info(`Trying to backup mailbox ${person.emailAddress}...`);
+  var mailboxName = `${person.firstName.toLowerCase()}.${person.lastName.toLowerCase()}`;
+  var command = `cd /var/qmail/mailnames/${config.domainForGovernedMailboxes} && tar -czf ${person.emailAddress}_${dateTime} ${mailboxName}/`;
+  var output = await ExecUtils.execute(logger, command);
+  if (output === undefined) {
+    return true;
+  } else if(!(output === undefined) && output.length == 0 ) {
+    return true;
+  } else if(!(output === undefined) && output.length > 0 ) {
+    output = output.trim();
+    if (output == '0') {
+      return true;
+    } else {
+      logger.error(`Command result: ${output.replace(/\r?\n/g, '')}`);
+      return false;
+    }
+  } else {
+    return false;
+  }
+}
+
+/**
  * Create a mailbox using the given person's data
  * @param {object} person - object which contains at least the attributes 'mailbox'
  * 
  * Command result:
- * SUCCESS: Removal of 'delete@efghaigerseelbach.de' complete
+ * SUCCESS: Removal of 'some.mailbox@example.org' complete
  * @return {boolean} true in case a mailbox could be removed, otherwise false
  */
 async function removeMailbox(person) {
