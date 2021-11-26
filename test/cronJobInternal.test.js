@@ -58,7 +58,7 @@ describe('cron Job (main)', function () {
         expect(value.details.newGovernedMailboxes.length).to.equal(0);
     });
 
-    it('given 2 governed mailboxes & 3 mailboxes in the input data & creation of the non-governed mailbox works successfully', async () => {
+    it('given 2 governed mailboxes & 3 mailboxes as input & creation of the non-governed forwarding-mailbox works successfully', async () => {
         // Given
         givenSomeMailbox(execUtilsExecuteStub, config.domainForGovernedMailboxes, "externaldomain", "some", "mail1", true, false);
         givenSomeMailbox(execUtilsExecuteStub, config.domainForGovernedMailboxes, "externaldomain", "some", "mail2", true, false);
@@ -91,7 +91,7 @@ describe('cron Job (main)', function () {
         expect(value.details.newGovernedMailboxes.length).to.equal(1);
     });
 
-    it('given 2 governed mailboxes & 3 mailboxes in the input data & creation of the non-governed mailbox fails', async () => {
+    it('given 2 governed mailboxes & 3 mailboxes as input & creation of the non-governed forwarding-mailbox fails', async () => {
         // Given
         givenSomeMailbox(execUtilsExecuteStub, config.domainForGovernedMailboxes, "externaldomain", "some", "mail1", true, false);
         givenSomeMailbox(execUtilsExecuteStub, config.domainForGovernedMailboxes, "externaldomain", "some", "mail2", true, false);
@@ -123,6 +123,41 @@ describe('cron Job (main)', function () {
         expect(value.details.issues.length).to.equal(1);
         expect(value.details.newGovernedMailboxes.length).to.equal(0);
     });
+
+    it('given 2 governed mailboxes & 3 mailboxes as input & creation of the non-governed mailbox works successfully', async () => {
+        // Given
+        givenSomeMailbox(execUtilsExecuteStub, config.domainForGovernedMailboxes, "externaldomain", "some", "mail1", true, false);
+        givenSomeMailbox(execUtilsExecuteStub, config.domainForGovernedMailboxes, "externaldomain", "some", "mail2", true, false);
+        prepareStubForGettingListOfMailboxes(execUtilsExecuteStub);
+
+        givenInputDataEntry("some", "mail1", "some.mail1@externaldomain", "whatever");
+        givenInputDataEntry("some", "mail2", "some.mail2@externaldomain", "whatever");
+        givenInputDataEntry("some", "mail3", "some.mail3@externaldomain", "Mailbox for some mail3", config.tags.mailbox);
+        prepareStubFsReadFileSync(fsReadFileSyncStub);
+
+        var person = {
+            "id": 1,
+            "firstName": "some",
+            "lastName": "mail3",
+            "type": config.tags.mailbox,
+            "targetEmail": "some.mail3@externaldomain",
+            "description": "Mailbox for some mail3"
+        };
+        person.emailAddress = `${person.firstName.toLowerCase()}.${person.lastName.toLowerCase()}@${config.domainForGovernedMailboxes}`;
+
+        var command = `plesk bin mail --create ${person.emailAddress} -mailbox true -passwd '' -description 'Auto-maintained mail box for ${person.description}'`;
+        execUtilsExecuteStub.withArgs(sinon.match.any, command)
+            .returns(`\nSUCCESS: Creation of mailname '${person.emailAddress}' complete`);
+
+        // When
+        var value = await CronJob.main();
+        expect(value.success).to.be.true;
+        expect(value.details.countOfGovernedMailboxesBefore).to.equal(2);
+        expect(value.details.countOfGovernedMailboxesAfter).to.equal(3);
+        expect(value.details.issues.length).to.equal(0);
+        expect(value.details.newGovernedMailboxes.length).to.equal(1);
+    });
+
 });
 
 

@@ -81,8 +81,8 @@ async function main() {
           var html = config.notification[config.language].creation_of_a_mailbox.html;
           html = html.replace('{{emailAddress}}', content[i].emailAddress);
           html = html.replace('{{password}}',  content[i].password);
-          
           EmailNotifier.send(logger, content[i].targetEmail, subject, text, html).catch(console.error);
+
         } else if(content[i].type == config.tags.forwarding_mailbox) {
           var subject = config.notification[config.language].creation_of_a_forwarding_mailbox.subject;
           var text = config.notification[config.language].creation_of_a_forwarding_mailbox.text;
@@ -91,7 +91,6 @@ async function main() {
           var html = config.notification[config.language].creation_of_a_forwarding_mailbox.html;
           html = html.replace('{{emailAddress}}', content[i].emailAddress);
           html = html.replace('{{forwardingTarget}}',  content[i].targetEmail);
-          
           EmailNotifier.send(logger, content[i].targetEmail, subject, text, html).catch(console.error);
         }
       } else {
